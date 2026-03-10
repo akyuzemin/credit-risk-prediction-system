@@ -1,37 +1,96 @@
 # Credit Risk Prediction System
 
-End-to-end ML project for loan default risk scoring.
+Kredi başvurusu yapan kullanıcıların bilgilerine göre ön değerlendirme sonucu üreten full-stack bir uygulamadır. Sistem, başvuru bilgilerini analiz ederek kullanıcının genel kredi uygunluk durumunu, risk seviyesini, risk oranını ve başvuruyu güçlendirmek için kısa önerileri gösterir.
 
-## Features
-- Single applicant risk prediction
-- Batch CSV scoring
-- FastAPI backend
-- Simple frontend dashboard
-- Training and evaluation pipeline
-- Feature importance and model comparison reports
+## Proje Özeti
 
-## Quick start
+Bu proje iki ana parçadan oluşur:
 
-```bash
+- **Backend:** FastAPI
+- **Frontend:** React + Vite
+
+Uygulama, kredi başvurusu için girilen bilgileri değerlendirir ve kullanıcıya şu çıktıları sunar:
+
+- başvuru durumu
+- risk seviyesi
+- risk oranı
+- değerlendirme özeti
+- başvuruyu güçlendirmek için öneriler
+
+## Özellikler
+
+- Kullanıcı dostu kredi uygunluk ön değerlendirme ekranı
+- Türkçe arayüz
+- Risk seviyesi gösterimi
+- Risk oranı gösterimi
+- Başlıca etkileyen unsurların listelenmesi
+- FastAPI tabanlı REST API
+- React tabanlı modern frontend
+
+## Kullanılan Teknolojiler
+
+### Backend
+- Python
+- FastAPI
+- Pandas
+- Scikit-learn
+- Joblib
+
+### Frontend
+- React
+- Vite
+- TypeScript
+- Tailwind / shadcn UI
+
+## Proje Yapısı
+
+```text
+credit-risk-prediction-system_fullstack
+├── app
+├── src
+├── configs
+├── models
+├── reports
+├── creditview-dashboard
+└── requirements.txt
+
+Backend Çalıştırma
 python -m venv .venv
-.venv\Scripts\activate   # Windows
+.venv\Scripts\activate
 pip install -r requirements.txt
-
-python -m src.data.prepare_dataset
-python -m src.train --config configs/config.yaml
-python -m src.evaluate --config configs/config.yaml
-
 uvicorn app.main:app --reload
-```
 
-Open:
-- http://127.0.0.1:8000
-- http://127.0.0.1:8000/docs
+Backend test adresi:
+http://127.0.0.1:8000/health
 
-## Expected raw file
+Frontend Çalıştırma
+cd creditview-dashboard
+npm install
+npm run dev
 
-Place the downloaded German Credit file at:
+Frontend Adresi:
+http://localhost:8080
 
-`data/raw/german_credit.data`
+Uygulamanın Amacı
 
-The prepare step converts it into `data/raw/credit_risk.csv`.
+Bu uygulama, kullanıcıların kredi başvurusuna dair temel bilgileri girerek hızlı bir ön değerlendirme sonucu almasını sağlar. Amaç, teknik model ayrıntılarını göstermek yerine kullanıcıya anlaşılır ve sade bir karar ekranı sunmaktır.
+
+Çıktılar
+
+Kullanıcı sistem üzerinden aşağıdaki bilgileri görür:
+
+Başvuru Durumu: Uygun / Ek İnceleme Gerekli / Uygun Değil
+
+Risk Seviyesi: Düşük / Orta / Yüksek
+
+Risk Oranı: Yüzdesel tahmini risk değeri
+
+Değerlendirme Özeti
+
+Başvuruyu Güçlendirmek İçin Öneri
+
+
+Not
+
+Bu uygulama yalnızca ön değerlendirme amacı taşır. Nihai kredi kararı gerçek banka prosedürleri ve resmi değerlendirme süreçleri doğrultusunda verilir.
+

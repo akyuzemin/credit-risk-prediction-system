@@ -1,0 +1,16 @@
+[
+  {
+    "model": "logistic_regression",
+    "roc_auc": 0.8073809523809524,
+    "pr_auc": 0.6334492123517801,
+    "f1_score": 0.6712328767123288,
+    "selection_score": 0.7040210138150204
+  },
+  {
+    "model": "random_forest",
+    "roc_auc": 0.8085714285714286,
+    "pr_auc": 0.6618882398894559,
+    "f1_score": 0.6379310344827587,
+    "selection_score": 0.7027969009812143
+  }
+]

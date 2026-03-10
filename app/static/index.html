@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Risk Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #eef2ff;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .top {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .two {
+      grid-template-columns: 1.2fr 0.8fr;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: #151c34;
+      border: 1px solid #253052;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .muted {
+      color: #a5b4fc;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 6px;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #fff;
+    }
+
+    button {
+      background: #2563eb;
+      cursor: pointer;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .result {
+      line-height: 1.7;
+    }
+
+    .risk-high {
+      color: #f87171;
+    }
+
+    .risk-medium {
+      color: #fbbf24;
+    }
+
+    .risk-low {
+      color: #4ade80;
+    }
+
+    .kpi {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .top,
+      .two {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Credit Risk Prediction Dashboard</h1>
+
+    <div class="grid top">
+      <div class="card">
+        <div class="muted">Aktif Model</div>
+        <div id="modelName" class="kpi">-</div>
+      </div>
+      <div class="card">
+        <div class="muted">Threshold</div>
+        <div id="threshold" class="kpi">-</div>
+      </div>
+      <div class="card">
+        <div class="muted">ROC-AUC</div>
+        <div id="rocAuc" class="kpi">-</div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="card">
+        <h2>Tek Başvuru Skorlama</h2>
+
+        <form id="predictForm" class="grid top">
+          <div>
+            <label>Checking Status</label>
+            <select name="checking_status"></select>
+          </div>
+
+          <div>
+            <label>Duration (months)</label>
+            <input name="duration_months" type="number" value="24" />
+          </div>
+
+          <div>
+            <label>Credit History</label>
+            <select name="credit_history"></select>
+          </div>
+
+          <div>
+            <label>Purpose</label>
+            <select name="purpose"></select>
+          </div>
+
+          <div>
+            <label>Credit Amount</label>
+            <input name="credit_amount" type="number" value="3500" />
+          </div>
+
+          <div>
+            <label>Savings Status</label>
+            <select name="savings_status"></select>
+          </div>
+
+          <div>
+            <label>Employment Since</label>
+            <select name="employment_since"></select>
+          </div>
+
+          <div>
+            <label>Installment Rate</label>
+            <input name="installment_rate" type="number" value="2" />
+          </div>
+
+          <div>
+            <label>Personal Status / Sex</label>
+            <select name="personal_status_sex"></select>
+          </div>
+
+          <div>
+            <label>Other Debtors</label>
+            <select name="other_debtors"></select>
+          </div>
+
+          <div>
+            <label>Residence Since</label>
+            <input name="present_residence_since" type="number" value="2" />
+          </div>
+
+          <div>
+            <label>Property</label>
+            <select name="property"></select>
+          </div>
+
+          <div>
+            <label>Age</label>
+            <input name="age" type="number" value="35" />
+          </div>
+
+          <div>
+            <label>Other Installment Plans</label>
+            <select name="other_installment_plans"></select>
+          </div>
+
+          <div>
+            <label>Housing</label>
+            <select name="housing"></select>
+          </div>
+
+          <div>
+            <label>Existing Credits</label>
+            <input name="existing_credits" type="number" value="1" />
+          </div>
+
+          <div>
+            <label>Job</label>
+            <select name="job"></select>
+          </div>
+
+          <div>
+            <label>Dependents</label>
+            <input name="num_dependents" type="number" value="1" />
+          </div>
+
+          <div>
+            <label>Own Telephone</label>
+            <select name="own_telephone"></select>
+          </div>
+
+          <div>
+            <label>Foreign Worker</label>
+            <select name="foreign_worker"></select>
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <button type="submit">Default Risk Hesapla</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Sonuç</h2>
+        <div id="resultBox" class="result muted">Henüz skor üretilmedi.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("predictForm");
+    const resultBox = document.getElementById("resultBox");
+
+    function renderSelectOptions(selectElement, values) {
+      if (!selectElement) return;
+
+      if (!Array.isArray(values) || values.length === 0) {
+        selectElement.innerHTML = "";
+        return;
+      }
+
+      const isObjectFormat =
+        typeof values[0] === "object" &&
+        values[0] !== null &&
+        "value" in values[0] &&
+        "label" in values[0];
+
+      if (isObjectFormat) {
+        selectElement.innerHTML = values
+          .map(
+            (item) =>
+              `<option value="${item.value}">${item.label}</option>`
+          )
+          .join("");
+      } else {
+        selectElement.innerHTML = values
+          .map((value) => `<option value="${value}">${value}</option>`)
+          .join("");
+      }
+    }
+
+    async function loadMeta() {
+      const [metaRes, dashRes] = await Promise.all([
+        fetch("/meta"),
+        fetch("/dashboard-summary"),
+      ]);
+
+      if (!metaRes.ok) {
+        throw new Error("/meta endpoint başarısız");
+      }
+
+      if (!dashRes.ok) {
+        throw new Error("/dashboard-summary endpoint başarısız");
+      }
+
+      const meta = await metaRes.json();
+      const dash = await dashRes.json();
+
+      document.getElementById("modelName").textContent =
+        dash.available_model || "-";
+
+      document.getElementById("threshold").textContent =
+        dash.threshold ?? "-";
+
+      document.getElementById("rocAuc").textContent =
+        dash.latest_metrics?.roc_auc
+          ? Number(dash.latest_metrics.roc_auc).toFixed(3)
+          : "-";
+
+      const opts = meta.select_options || {};
+
+      for (const [key, values] of Object.entries(opts)) {
+        const el = form.querySelector(`[name="${key}"]`);
+        renderSelectOptions(el, values);
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+
+      [
+        "duration_months",
+        "credit_amount",
+        "installment_rate",
+        "present_residence_since",
+        "age",
+        "existing_credits",
+        "num_dependents",
+      ].forEach((k) => {
+        payload[k] = Number(payload[k]);
+      });
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(JSON.stringify(data));
+        }
+
+        resultBox.className = "result";
+        resultBox.innerHTML = `
+          <div><strong>Default Probability:</strong> ${(data.default_probability * 100).toFixed(2)}%</div>
+          <div><strong>Risk Score:</strong> ${data.risk_score}/100</div>
+          <div><strong>Risk Level:</strong> <span class="risk-${data.risk_level}">${data.risk_level}</span></div>
+          <div><strong>Recommended Action:</strong> ${data.recommended_action}</div>
+          <div><strong>Decision:</strong> ${data.underwriting_action.decision}</div>
+          <div><strong>Note:</strong> ${data.underwriting_action.note}</div>
+        `;
+      } catch (err) {
+        resultBox.className = "result risk-high";
+        resultBox.textContent = "Hata: " + err.message;
+      }
+    });
+
+    loadMeta().catch((err) => {
+      console.error("Meta yüklenemedi:", err);
+      resultBox.className = "result risk-high";
+      resultBox.textContent = "Başlangıç verileri yüklenemedi: " + err.message;
+    });
+  </script>
+</body>
+</html>

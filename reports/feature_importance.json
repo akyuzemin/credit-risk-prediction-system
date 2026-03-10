@@ -1,0 +1,62 @@
+[
+  {
+    "feature": "cat__checking_status_A14",
+    "importance": 0.10267247648303578
+  },
+  {
+    "feature": "cat__purpose_A41",
+    "importance": 0.09739106988057337
+  },
+  {
+    "feature": "cat__credit_history_A34",
+    "importance": 0.08880148848076098
+  },
+  {
+    "feature": "cat__purpose_A46",
+    "importance": 0.08618105890740721
+  },
+  {
+    "feature": "cat__foreign_worker_A202",
+    "importance": 0.07798887475846683
+  },
+  {
+    "feature": "cat__savings_status_A64",
+    "importance": 0.06519640094604348
+  },
+  {
+    "feature": "cat__employment_since_A74",
+    "importance": 0.06252389694211415
+  },
+  {
+    "feature": "cat__personal_status_sex_A93",
+    "importance": 0.05982335522117066
+  },
+  {
+    "feature": "cat__other_installment_plans_A143",
+    "importance": 0.05703077431227517
+  },
+  {
+    "feature": "cat__other_debtors_A103",
+    "importance": 0.05524522892093777
+  },
+  {
+    "feature": "cat__credit_history_A30",
+    "importance": 0.05277766754212474
+  },
+  {
+    "feature": "cat__housing_A153",
+    "importance": 0.05238222344982926
+  },
+  {
+    "feature": "cat__checking_status_A11",
+    "importance": 0.050705464987050225
+  },
+  {
+    "feature": "cat__savings_status_A61",
+    "importance": 0.0461719851721128
+  },
+  {
+    "feature": "cat__property_A124",
+    "importance": 0.04510803399609743
+  }
+]
